@@ -349,7 +349,7 @@ function MiniCompletion.auto_info()
   H.info.event = vim.v.event
   H.info.id = H.info.id + 1
 
-  -- Don't event try to show info if nothing is selected in popup
+  -- Don't even try to show info if nothing is selected in popup
   if vim.tbl_isempty(H.info.event.completed_item) then
     return
   end
@@ -443,10 +443,10 @@ function MiniCompletion.completefunc_lsp(findstart, base)
     -- 'complete-function' (as in Vim's help). This is due to the fact that
     -- cursor line and position are different on the first and second calls to
     -- 'complete-function'. For example, when calling this function at the end
-    -- of the line '  he', cursor position on the second call will be
+    -- of the line '  he', cursor position on the first call will be
     -- (<linenum>, 4) and line will be '  he' but on the second call -
     -- (<linenum>, 2) and '  ' (because 2 is a column of completion start).
-    -- This request is executed only on first call because it returns `-3` on
+    -- This request is executed only on second call because it returns `-3` on
     -- first call (which means cancel and leave completion mode).
     -- NOTE: using `buf_request_all()` (instead of `buf_request()`) to easily
     -- handle possible fallback and to have all completion suggestions be
@@ -588,11 +588,7 @@ function H.setup_config(config)
     ['delay.signature'] = { config.delay.signature, 'number' },
 
     ['window_dimensions.info'] = { config.window_dimensions.info, 'table' },
-    ['window_dimensions.info.height'] = { config.window_dimensions.info.height, 'number' },
-    ['window_dimensions.info.width'] = { config.window_dimensions.info.width, 'number' },
     ['window_dimensions.signature'] = { config.window_dimensions.signature, 'table' },
-    ['window_dimensions.signature.height'] = { config.window_dimensions.signature.height, 'number' },
-    ['window_dimensions.signature.width'] = { config.window_dimensions.signature.width, 'number' },
 
     ['lsp_completion.source_func'] = {
       config.lsp_completion.source_func,
@@ -606,6 +602,13 @@ function H.setup_config(config)
 
     ['mappings.force_twostep'] = { config.mappings.force_twostep, 'string' },
     ['mappings.force_fallback'] = { config.mappings.force_fallback, 'string' },
+  })
+
+  vim.validate({
+    ['window_dimensions.info.height'] = { config.window_dimensions.info.height, 'number' },
+    ['window_dimensions.info.width'] = { config.window_dimensions.info.width, 'number' },
+    ['window_dimensions.signature.height'] = { config.window_dimensions.signature.height, 'number' },
+    ['window_dimensions.signature.width'] = { config.window_dimensions.signature.width, 'number' },
   })
 
   return config
